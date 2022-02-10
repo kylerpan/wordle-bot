@@ -1,11 +1,10 @@
 from copy import copy
 
-colors = ['b', 'y', 'g']
 colorCombinations = []
 
 def permutation(colors, result, index):
     temp = copy(result)
-    temp.append(colors[index])
+    temp += (colors[index],)
     
     if (len(temp) >= 5):
         colorCombinations.append(temp)
@@ -14,7 +13,16 @@ def permutation(colors, result, index):
         permutation(colors, temp, 1)
         permutation(colors, temp, 2)
 
+
+colors = ('b', 'y', 'g')
+
 for i in range(len(colors)):
     permutation(colors, [], i)
 
+colorCombinations = tuple(colorCombinations)
 colorCombinationsLength = len(colorCombinations)
+
+if __name__ == '__main__':
+    print(colorCombinations)
+    print(colors)
+    print(colorCombinationsLength)
