@@ -3,7 +3,7 @@ from colors import colors
 from initialExpectValue import initialExpected
 from expectedValues import changeValidWords
 
-if __name__ == '__main__':
+def runGame():
     wordsLeft = possibleWords
     print('---Welcome to Wordle Bot---\n')
     print('Here are some words with the highest amount of information:')
@@ -29,4 +29,7 @@ if __name__ == '__main__':
         for i in range(15):
             print(wordsLeftExpected[i][0], wordsLeftExpected[i][1])
         print("...")
+
+if __name__ == '__main__':
+    runGame()
 
