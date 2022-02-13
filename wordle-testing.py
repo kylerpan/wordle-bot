@@ -1,16 +1,16 @@
-from words import possibleWords, possibleAnswers
-from colors import colorCombinations
-from initialExpectValue import initialExpected
 from copy import copy
 from math import log2
 import time
 
+POSSIBLE_WORDS = [f'{line.rstrip()}' for line in open("possibleWords.txt", "r")]
+COLOR_COMBINATIONS = [list(line.rstrip()) for line in open("colorCombinations.txt", "r")]
+INITIAL_EXPECTED_VALUE = [tuple(line.rstrip().split(', ')) for line in open("initialExpectedValue.txt", "r")]
 allTries = []
 
 def allExpectedValues(wordInput, wordsLeft):
     allExpected = []
 
-    for combination in colorCombinations:
+    for combination in COLOR_COMBINATIONS:
         result = copy(wordsLeft)
 
         for i in range(5):
@@ -40,15 +40,15 @@ def changeValidWords(wordInput, colorResult, wordsLeft):
             result = [word for word in result if word[i] == wordInput[i]]
 
     wordsLeftExpected = []
-    for word in possibleWords:
+    for word in POSSIBLE_WORDS:
         wordsLeftExpected.append((word, allExpectedValues(word, result)))
     wordsLeftExpected = sorted(wordsLeftExpected, key=lambda x: x[1], reverse=True)
 
     return wordsLeftExpected, result, result
 
 def runGame(word):
-    wordsLeft = possibleWords
-    wordInput = initialExpected[0][0]
+    wordsLeft = POSSIBLE_WORDS
+    wordInput = INITIAL_EXPECTED_VALUE[0][0]
     print(f'answer: {word} \nguesses: ', end='')
     count = 0
 
@@ -76,6 +76,6 @@ def runGame(word):
 
 if __name__ == '__main__':
     start = time.time()
-    runGame('shard')
+    runGame('abyss')
     end = time.time()
     print(f'time: {int(end - start)}')

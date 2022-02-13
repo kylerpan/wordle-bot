@@ -1,8 +1,9 @@
-from words import possibleWords, possibleWordsLength
-from colors import colorCombinations
 from collections import defaultdict
 from copy import copy
 from math import log2
+
+POSSIBLE_WORDS = [f'{line.rstrip()}' for line in open("possibleWords.txt", "r")]
+COLOR_COMBINATIONS = [list(line.rstrip()) for line in open("colorCombinations.txt", "r")]
 
 def progressBar(iterable, prefix = '', suffix = '', decimals = 1, length = 100, fill = '█', printEnd = "\r"):
     """
@@ -73,7 +74,7 @@ def allExpectedValues(wordInput, wordsLeft):
     wordsLeftLength = len(wordsLeft)
     allCombination = []
 
-    for combination in colorCombinations:
+    for combination in COLOR_COMBINATIONS:
         result = newResult(wordInput, combination, wordsLeft, allCombination)
         resultLength = len(result)
         probability = resultLength / wordsLeftLength
@@ -88,7 +89,7 @@ def changeValidWords(wordInput, colorResult, wordsLeft):
     result = newResult(wordInput, colorResult, wordsLeft, [])
     
     wordsLeftExpected = []
-    for word in progressBar(possibleWords, prefix='Progress', suffix='Complete', length=50):
+    for word in progressBar(POSSIBLE_WORDS, prefix='Progress', suffix='Complete', length=50):
         wordsLeftExpected.append((word, allExpectedValues(word, result)))
     wordsLeftExpected = sorted(wordsLeftExpected, key=lambda x: x[1], reverse=True)
     
@@ -100,7 +101,7 @@ def changeValidWords(wordInput, colorResult, wordsLeft):
 
 
 if __name__ == '__main__':
-    allWordsExpected = sorted([(word, allExpectedValues(word, possibleWords)) for word in possibleWords], key=lambda x: x[1], reverse=True)
+    allWordsExpected = sorted([(word, allExpectedValues(word, POSSIBLE_WORDS)) for word in POSSIBLE_WORDS], key=lambda x: x[1], reverse=True)
     f = open("allWordsExpected.txt", "w")
     f.write('(')
     for word in allWordsExpected:
