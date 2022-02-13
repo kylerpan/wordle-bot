@@ -1,9 +1,8 @@
 from collections import defaultdict
-from copy import copy
 from math import log2
 
-POSSIBLE_WORDS = [f'{line.rstrip()}' for line in open("possibleWords.txt", "r")]
-COLOR_COMBINATIONS = [list(line.rstrip()) for line in open("colorCombinations.txt", "r")]
+POSSIBLE_WORDS = [f'{line.rstrip()}' for line in open("textFiles/possibleWords.txt", "r")]
+COLOR_COMBINATIONS = [list(line.rstrip()) for line in open("textFiles/colorCombinations.txt", "r")]
 
 def progressBar(iterable, prefix = '', suffix = '', decimals = 1, length = 100, fill = '█', printEnd = "\r"):
     """
@@ -34,7 +33,6 @@ def progressBar(iterable, prefix = '', suffix = '', decimals = 1, length = 100, 
     print()
 
 def newResult(wordInput, colorResult, wordsLeft, allCombination):
-    result = copy(wordsLeft)
     letterCounter = defaultdict(int)
     colorsDict = defaultdict(list)
     colorsCheck = defaultdict(int)
@@ -58,16 +56,16 @@ def newResult(wordInput, colorResult, wordsLeft, allCombination):
             letterCounter[letter] += 1
 
     for letter, index in colorsDict['g']:
-        result = [word for word in result if word[index] == letter]
+        wordsLeft = [word for word in wordsLeft if word[index] == letter]
     
     for letter, index in colorsDict['y']:
-        result = [word for word in result if word[index] != letter]
-        result = [word for word in result if word.count(letter) >= letterCounter[letter]]
+        wordsLeft = [word for word in wordsLeft if word[index] != letter]
+        wordsLeft = [word for word in wordsLeft if word.count(letter) >= letterCounter[letter]]
 
     for letter, index in colorsDict['b']:
-        result = [word for word in result if word.count(letter) == letterCounter[letter]]
+        wordsLeft = [word for word in wordsLeft if word.count(letter) == letterCounter[letter]]
 
-    return result
+    return wordsLeft
 
 def allExpectedValues(wordInput, wordsLeft):
     allExpected = []
@@ -97,7 +95,8 @@ def changeValidWords(wordInput, colorResult, wordsLeft):
     for i in range(len(result)):
         print(result[i], end=" ")
         if (i + 1) % 15 == 0: print()
-    return wordsLeftExpected, result, result
+        
+    return wordsLeftExpected, result
 
 
 if __name__ == '__main__':

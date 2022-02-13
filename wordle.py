@@ -1,7 +1,7 @@
 from expectedValues import changeValidWords
 
-POSSIBLE_WORDS = [f'{line.rstrip()}' for line in open("possibleWords.txt", "r")]
-INITIAL_EXPECTED_VALUE = [tuple(line.rstrip().split(', ')) for line in open("initialExpectedValue.txt", "r")]
+POSSIBLE_WORDS = [f'{line.rstrip()}' for line in open("textFiles/possibleWords.txt", "r")]
+INITIAL_EXPECTED_VALUE = [tuple(line.rstrip().split(', ')) for line in open("textFiles/initialExpectedValue.txt", "r")]
 
 def runGame():
     wordsLeft = POSSIBLE_WORDS
@@ -9,6 +9,7 @@ def runGame():
     print('Here are some words with the highest amount of information:')
     for i in range(15):
         print(INITIAL_EXPECTED_VALUE[i][0], INITIAL_EXPECTED_VALUE[i][1] + '0' * (18 - len(str(INITIAL_EXPECTED_VALUE[i][1]))))
+    
     while True:
         word = input('\nPlease input the WORD you chose (e.g. crane): ')
         if (word not in POSSIBLE_WORDS):
@@ -20,11 +21,13 @@ def runGame():
             print('Please enter a valid 5 COLOR RESULTS\n')
             continue
 
-        wordsLeftExpected, wordsLeft, result = changeValidWords(word, colorResult, wordsLeft)
+        wordsLeftExpected, wordsLeft = changeValidWords(word, colorResult, wordsLeft)
+        
         print()
-        if (len(result) == 1):
-            print(f'The word is "{result[0]}"')
+        if (len(wordsLeft) == 1):
+            print(f'The word is "{wordsLeft[0]}"')
             break
+
         print('\nHere are some words with the highest amount of information after picking {word}:')
         for i in range(15):
             print(wordsLeftExpected[i][0], f'{wordsLeftExpected[i][1]}' + '0' * (18 - len(str(wordsLeftExpected[i][1]))))
