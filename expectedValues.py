@@ -1,5 +1,6 @@
 from words import possibleWords, possibleWordsLength
 from colors import colorCombinations
+from collections import defaultdict
 from copy import copy
 from math import log2
 
@@ -31,62 +32,61 @@ def progressBar(iterable, prefix = '', suffix = '', decimals = 1, length = 100, 
     # Print New Line on Complete
     print()
 
-def initialExpectedValues(wordInput):
-    allExpected = []
+def newResult(wordInput, colorResult, wordsLeft, allCombination):
+    result = copy(wordsLeft)
+    letterCounter = defaultdict(int)
+    colorsDict = defaultdict(list)
+    colorsCheck = defaultdict(int)
 
-    for combination in colorCombinations:
-        result = copy(possibleWords)
-
-        for i in range(5):
-            if combination[i] == 'b':
-                result = [word for word in result if wordInput[i] not in word]
-            elif combination[i] == 'y':
-                result = [word for word in result if wordInput[i] in word and word[i] != wordInput[i]]
-            else:
-                result = [word for word in result if word[i] == wordInput[i]]
-
-        resultLength = len(result)
-        probability = resultLength / possibleWordsLength
-        infoBit = log2(1/probability) if probability != 0 else 0
-        allExpected.append(probability * infoBit)
+    for i in range(5):
+        if colorResult[i] == 'b':
+            colorsDict['b'].append((wordInput[i], i))
+            colorsCheck[f'b-{wordInput[i]}'] += 1
+        elif colorResult[i] == 'y':
+            colorsDict['y'].append((wordInput[i], i))
+            colorsCheck[f'y-{wordInput[i]}'] += 1
+        else:
+            colorsDict['g'].append((wordInput[i], i))
+            colorsCheck[f'g-{wordInput[i]}'] += 1
     
-    print(wordInput, sum(allExpected))
-    return sum(allExpected)
+    if (colorsCheck in allCombination): return []
+    else: allCombination.append(colorsCheck)
+
+    for colorList in [colorsDict['g'], colorsDict['y']]:
+        for letter, index in colorList:
+            letterCounter[letter] += 1
+
+    for letter, index in colorsDict['g']:
+        result = [word for word in result if word[index] == letter]
+    
+    for letter, index in colorsDict['y']:
+        result = [word for word in result if word[index] != letter]
+        result = [word for word in result if word.count(letter) >= letterCounter[letter]]
+
+    for letter, index in colorsDict['b']:
+        result = [word for word in result if word.count(letter) == letterCounter[letter]]
+
+    return result
 
 def allExpectedValues(wordInput, wordsLeft):
     allExpected = []
+    wordsLeftLength = len(wordsLeft)
+    allCombination = []
 
     for combination in colorCombinations:
-        result = copy(wordsLeft)
-
-        for i in range(5):
-            if combination[i] == 'b':
-                result = [word for word in result if wordInput[i] not in word]
-            elif combination[i] == 'y':
-                result = [word for word in result if wordInput[i] in word and word[i] != wordInput[i]]
-            else:
-                result = [word for word in result if word[i] == wordInput[i]]
-
+        result = newResult(wordInput, combination, wordsLeft, allCombination)
         resultLength = len(result)
-        probability = resultLength / len(wordsLeft)
+        probability = resultLength / wordsLeftLength
+
         if probability == 0: continue
-        infoBit = log2(1/probability) if probability != 0 else 0
+        infoBit = log2(1/probability)
         allExpected.append(probability * infoBit)
-    
-    # print(wordInput, sum(allExpected))
+        
     return sum(allExpected)
 
 def changeValidWords(wordInput, colorResult, wordsLeft):
-    result = copy(wordsLeft)
-    for i in range(5):
-        if colorResult[i] == 'b':
-            result = [word for word in result if wordInput[i] not in word]
-        elif colorResult[i] == 'y':
-            result = [word for word in result if wordInput[i] in word and word[i] != wordInput[i]]
-        else:
-            result = [word for word in result if word[i] == wordInput[i]]
-
-    # wordsLeftExpected = sorted([(word, allExpectedValues(word, result)) for word in possibleWords], key=lambda x: x[1], reverse=True)
+    result = newResult(wordInput, colorResult, wordsLeft, [])
+    
     wordsLeftExpected = []
     for word in progressBar(possibleWords, prefix='Progress', suffix='Complete', length=50):
         wordsLeftExpected.append((word, allExpectedValues(word, result)))
@@ -95,12 +95,12 @@ def changeValidWords(wordInput, colorResult, wordsLeft):
     print(f'\n{len(result)} Words Left: ')
     for i in range(len(result)):
         print(result[i], end=" ")
-        if i % 15 == 0 and i != 0: print()
+        if (i + 1) % 15 == 0: print()
     return wordsLeftExpected, result, result
 
 
 if __name__ == '__main__':
-    allWordsExpected = sorted([(word, initialExpectedValues(word)) for word in possibleWords], key=lambda x: x[1], reverse=True)
+    allWordsExpected = sorted([(word, allExpectedValues(word, possibleWords)) for word in possibleWords], key=lambda x: x[1], reverse=True)
     f = open("allWordsExpected.txt", "w")
     f.write('(')
     for word in allWordsExpected:
