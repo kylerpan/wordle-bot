@@ -1,14 +1,25 @@
 # Wordle Bot
+
 Since Wordle is the next big game people are playing right now, I decided to make a Bot to solve my daily wordle problems.
 
 ## Concepts
-All of the concepts I used was from 3Blue1Brown's YouTube video on Wordle. 
-* Information Bit Theory
-* Entropy 
+
+All of the concepts I used was from 3Blue1Brown's YouTube video on Wordle.
+
+- Information Bit Theory
+- Entropy
+
+## Coding
+
+I used Python for the whole project and used Selenium to help with web scraping.
+
+- You must install Selenium and Python to run this program
 
 ## Description
-Note: All the possible words are hard coded inside and possible color result combinations and expected value for all possible words are already computed.  
-1. The program will show a list of words that give the highest information by Information Bit Theory and Entropy.
-2. The program asks the user for a valid 5 letter word along with the color results for that word.
-3. The program will also show a list the remaining possible words based on the user inputs. 
-4. The program will repeat all steps until there is only one remaining word. 
+
+Note: All the possible words are hard coded inside and possible color result combinations and expected value for all possible words are already computed.
+
+1. Run 'python wordle.py' in the terminal
+2. The program will solve wordle in a serparate browser while giving you information in the terminal
+3. The program will show a list of words that give the highest information by Information Bit Theory and Entropy.
+4. When the program is done, it will tell you the Wordle of the day

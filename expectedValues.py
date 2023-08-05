@@ -1,3 +1,9 @@
+#
+# Helper file that contains functions which computes
+# what is the next best word
+#
+
+
 from collections import defaultdict
 from math import log2
 
@@ -38,10 +44,10 @@ def newResult(wordInput, colorResult, wordsLeft, allCombination):
     colorsCheck = defaultdict(int)
 
     for i in range(5):
-        if colorResult[i] == 'b':
+        if colorResult[i] == 'absent':
             colorsDict['b'].append((wordInput[i], i))
             colorsCheck[f'b-{wordInput[i]}'] += 1
-        elif colorResult[i] == 'y':
+        elif colorResult[i] == 'present':
             colorsDict['y'].append((wordInput[i], i))
             colorsCheck[f'y-{wordInput[i]}'] += 1
         else:
@@ -95,6 +101,7 @@ def changeValidWords(wordInput, colorResult, wordsLeft):
     for i in range(len(result)):
         print(result[i], end=" ")
         if (i + 1) % 15 == 0: print()
+    print('\n')
         
     return wordsLeftExpected, result
 
