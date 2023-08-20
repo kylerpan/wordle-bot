@@ -75,12 +75,12 @@ def main():
         driver.find_element(By.CSS_SELECTOR, f'button[data-key="{char}"]').click()
       driver.find_element(By.CSS_SELECTOR, 'button[data-key="↵"]').click()
 
-      WebDriverWait(driver, 20).until(EC.visibility_of_element_located((By.XPATH, '/html/body/div/div/dialog/div/div/div/div[4]/div[2]/div/button')))
+      WebDriverWait(driver, 20).until(EC.visibility_of_element_located((By.XPATH, '/html/body/div/div/dialog/div/div/div/div[3]/div[2]/div/button')))
       print(f'The word is "{wordsLeft[0]}"')
       break
 
     try:
-      share = driver.find_element(By.XPATH, '/html/body/div/div/dialog/div/div/div/div[4]/div[2]/div/button')
+      share = driver.find_element(By.XPATH, '/html/body/div/div/dialog/div/div/div/div[3]/div[2]/div/button')
       print(f'The word is "{wordsLeft[0]}"')
       break
     except EC.NoSuchElementException:
